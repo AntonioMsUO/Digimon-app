@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Digimon App</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_message">Bienvenido a Digimon Dex</string>
+    <string name="digimon_list_btn">Listado de Digimon</string>
+    <string name="favorite_digimon_btn">Favoritos</string>
+    <string name="settings_btn">Configuración</string>
+</resources>
