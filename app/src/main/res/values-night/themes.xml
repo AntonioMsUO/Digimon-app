@@ -1,0 +1,8 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.DigimonApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Personaliza los colores aquí -->
+        <item name="android:windowBackground">@drawable/background_night</item>
+    </style>
+
+</resources>
