@@ -1,48 +1,31 @@
 package es.uniovi.digimonapp.ui.home
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
-
-import es.uniovi.digimonapp.ui.home.placeholder.PlaceholderContent.PlaceholderItem
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.DiffUtil
+import es.uniovi.digimonapp.model.Digimon
 import es.uniovi.digimonapp.databinding.ItemDigimonBinding
 
-/**
- * [RecyclerView.Adapter] that can display a [PlaceholderItem].
- * TODO: Replace the implementation with code for your data type.
- */
-class DigimonListRecyclerViewAdapter(
-    private val values: List<PlaceholderItem>
-) : RecyclerView.Adapter<DigimonListRecyclerViewAdapter.ViewHolder>() {
+class DigimonListRecyclerViewAdapter : ListAdapter<Digimon, DigimonDataHolder>(DigimonDiffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
-        return ViewHolder(
-            ItemDigimonBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
-
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DigimonDataHolder {
+        val binding = ItemDigimonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return DigimonDataHolder(binding.root)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
-        holder.idView.text = item.id
-        holder.contentView.text = item.content
+    override fun onBindViewHolder(holder: DigimonDataHolder, position: Int) {
+        val digimon = getItem(position)
+        holder.bind(digimon)
+    }
+}
+
+object DigimonDiffCallback : DiffUtil.ItemCallback<Digimon>() {
+    override fun areItemsTheSame(oldItem: Digimon, newItem: Digimon): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun getItemCount(): Int = values.size
-
-    inner class ViewHolder(binding: ItemDigimonBinding) : RecyclerView.ViewHolder(binding.root) {
-        val idView: TextView = binding.itemNumber
-        val contentView: TextView = binding.content
-
-        override fun toString(): String {
-            return super.toString() + " '" + contentView.text + "'"
-        }
+    override fun areContentsTheSame(oldItem: Digimon, newItem: Digimon): Boolean {
+        return oldItem == newItem
     }
-
 }
