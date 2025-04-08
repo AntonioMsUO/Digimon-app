@@ -98,6 +98,16 @@
             android:orientation="vertical"
             android:padding="8dp" />
 
+        <!--Título para las evoluciones. -->
+        <TextView
+            android:id="@+id/digimon_next_evolution_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Evoluciones"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
         <!--Muestra las evoluciones del Digimon. -->
         <LinearLayout
             android:id="@+id/digimon_next_evolutions_container"
