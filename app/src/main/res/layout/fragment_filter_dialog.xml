@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="200dp"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/name_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="@string/search_by_name"
+        android:inputType="text" />
+
+    <Spinner
+        android:id="@+id/attribute_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:prompt="@string/attribute_prompt" />
+
+    <Spinner
+        android:id="@+id/level_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:prompt="@string/level_prompt" />
+
+    <Switch
+        android:id="@+id/x_antibody_switch"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="@string/x_antibody"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/apply_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/apply"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

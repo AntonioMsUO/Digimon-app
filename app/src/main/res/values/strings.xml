@@ -1,9 +1,32 @@
 <resources>
     <string name="app_name">Digimon App</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="welcome_message">Bienvenido a Digimon Dex</string>
+    <string name="welcome_message">Digital Analyzer</string>
     <string name="digimon_list_btn">Listado de Digimon</string>
     <string name="favorite_digimon_btn">Favoritos</string>
     <string name="settings_btn">Configuración</string>
+    <string name="filter">Filtrar</string>
+    <string name="search">Buscar</string>
+    <string name="x_antibody">Anticuerpo-X</string>
+    <string name="search_by_name">Nombre</string>
+    <string name="apply">Aplicar</string>
+    <string name="attribute_prompt">Seleccionar atributo</string>
+    <string name="level_prompt">Seleccionar nivel</string>
+
+
+
+    <string name="all_option">Todos</string>
+
+    <!-- Attributes -->
+    <string name="attribute_data">Datos</string>
+    <string name="attribute_vaccine">Vacuna</string>
+    <string name="attribute_virus">Virus</string>
+
+    <!-- Levels -->
+    <string name="level_baby1">Bebé I</string>
+    <string name="level_baby2">Bebé II</string>
+    <string name="level_child">Principiante</string>
+    <string name="level_adult">Campeón</string>
+    <string name="level_perfect">Perfecto</string>
+    <string name="level_ultimate">Supremo</string>
 </resources>

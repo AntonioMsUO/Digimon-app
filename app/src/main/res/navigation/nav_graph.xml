@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/detailFragment"
-        android:name="es.uniovi.digimonapp.ui.detail.DetailFragment"
+        android:name="es.uniovi.digimonapp.ui.detail.DigimonDetailFragment"
         android:label="Detalles del Digimon" />
 
     <fragment

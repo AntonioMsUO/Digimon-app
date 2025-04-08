@@ -15,34 +15,57 @@ import android.util.Log
 
 class HomeViewModel : ViewModel() {
 
-    private val _digimons = MutableLiveData<List<Digimon>>()
-    val digimons: LiveData<List<Digimon>> get() = _digimons
+    private val _digimons = MutableLiveData<MutableList<Digimon>>()
+    val digimons: LiveData<MutableList<Digimon>> get() = _digimons
 
     private val _appUIStateObservable = MutableLiveData<AppUIState>()
     val appUIStateObservable: LiveData<AppUIState> get() = _appUIStateObservable
 
+    private var currentPage = 0
+    private val pageSize = 20
+
+    private var lastFilters: Filters? = null
+
+    data class Filters(
+        val name: String?,
+        val attribute: String?,
+        val level: String?,
+        val xAntibody: Boolean?
+    )
+
     init {
-        fetchDigimons()
+        loadDigimons()
     }
 
-    fun fetchDigimons() {
+    fun loadDigimons(
+        page: Int = 0,
+        filters: Filters? = null,
+        append: Boolean = false
+    ) {
         viewModelScope.launch {
-            Repository.updateDigimonData()
+            lastFilters = filters
+            Repository.getDigimons(
+                page = page,
+                pageSize = pageSize,
+                name = filters?.name,
+                attribute = filters?.attribute,
+                level = filters?.level,
+                xAntibody = filters?.xAntibody
+            )
                 .map { result ->
                     when (result) {
                         is ApiResult.Success -> {
-                            _digimons.value = result.data
-                            Log.d("HomeViewModel", "Datos recibidos: ${result.data}")
+                            val newList = result.data ?: emptyList()
+                            _digimons.value = if (append) {
+                                (_digimons.value ?: mutableListOf()).apply { addAll(newList) }
+                            } else {
+                                newList.toMutableList()
+                            }
                             AppUIState.Success(result.data)
                         }
-                        is ApiResult.Error -> {
-                            Log.e("HomeViewModel", "Error: ${result.message}")
-                            AppUIState.Error(result.message)
-                        }
-                        is ApiResult.Loading -> {
-                            Log.d("HomeViewModel", "Cargando datos...")
-                            AppUIState.Loading(true)
-                        }
+
+                        is ApiResult.Error -> AppUIState.Error(result.message)
+                        is ApiResult.Loading -> AppUIState.Loading(true)
                     }
                 }
                 .collect { state ->
@@ -50,4 +73,24 @@ class HomeViewModel : ViewModel() {
                 }
         }
     }
+
+    fun loadNextPage() {
+        currentPage++
+        loadDigimons(currentPage, lastFilters, append = true)
+    }
+
+    fun applyFilters(name: String?, attribute: String?, level: String?, xAntibody: Boolean?) {
+        currentPage = 0
+
+        // Limpiar los filtros si son "todos" o vacíos
+        val cleanedName = name?.takeIf { it.isNotBlank() }
+        val cleanedAttribute = attribute?.takeIf { it.isNotBlank() && it.lowercase() != "all" }
+        val cleanedLevel = level?.takeIf { it.isNotBlank() && it.lowercase() != "all" }
+
+        loadDigimons(
+            page = currentPage,
+            filters = Filters(cleanedName, cleanedAttribute, cleanedLevel, xAntibody)
+        )
+    }
+
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="attribute_keys">
+        <item>Data</item>
+        <item>Vaccine</item>
+        <item>Virus</item>
+    </string-array>
+
+    <string-array name="level_keys">
+        <item>Baby I</item>
+        <item>Baby II</item>
+        <item>Child</item>
+        <item>Adult</item>
+        <item>Perfect</item>
+        <item>Ultimate</item>
+    </string-array>
+
+    <string-array name="attribute_display">
+        <item>@string/attribute_data</item>
+        <item>@string/attribute_vaccine</item>
+        <item>@string/attribute_virus</item>
+    </string-array>
+
+    <string-array name="level_display">
+        <item>@string/level_baby1</item>
+        <item>@string/level_baby2</item>
+        <item>@string/level_child</item>
+        <item>@string/level_adult</item>
+        <item>@string/level_perfect</item>
+        <item>@string/level_ultimate</item>
+    </string-array>
+</resources>

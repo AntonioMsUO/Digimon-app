@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!--Muestra el nombre del Digimon en grande. -->
+
+        <TextView
+            android:id="@+id/digimon_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <!--Muestra la imagen del Digimon. -->
+        <ImageView
+            android:id="@+id/digimon_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+             />
+
+        <!--Muestra el nivel del Digimon. -->
+        <TextView
+            android:id="@+id/digimon_level"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/darker_gray" />
+
+        <!--Muestra el atributo del Digimon. -->
+        <TextView
+            android:id="@+id/digimon_attribute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/darker_gray" />
+
+        <!--Muestra el tipo del Digimon. -->
+        <TextView
+            android:id="@+id/digimon_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/darker_gray" />
+
+        <!--Muestra la descripción del Digimon. -->
+        <TextView
+            android:id="@+id/digimon_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/black" />
+
+        <!--Muestra el peso del Digimon. -->
+        <TextView
+            android:id="@+id/digimon_skills_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Habilidades"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <!--Muestra las habilidades del Digimon. -->
+        <LinearLayout
+            android:id="@+id/digimon_skills_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="4dp" />
+
+        <!--Título para las evoluciones. -->
+        <TextView
+            android:id="@+id/digimon_evolution_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Evoluciones Previas"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <!--Muestra las evoluciones del Digimon. -->
+        <LinearLayout
+            android:id="@+id/digimon_evolutions_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+</ScrollView>

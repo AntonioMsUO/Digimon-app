@@ -12,15 +12,22 @@ object Repository {
 
     private val apiService = RetrofitClient.retrofitService
 
-    suspend fun updateDigimonData(): Flow<ApiResult<List<Digimon>>> = flow {
+    suspend fun getDigimons(
+        page: Int? = null,
+        pageSize: Int? = null,
+        name: String? = null,
+        attribute: String? = null,
+        level: String? = null,
+        xAntibody: Boolean? = null
+    ): Flow<ApiResult<List<Digimon>>> = flow {
         emit(ApiResult.Loading(null))
         try {
-            val response: RootData = apiService.getDigimons()
-            emit(ApiResult.Success(response.digimon))
-        } catch (e: HttpException) {
-            emit(ApiResult.Error(e.message ?: "Error desconocido"))
+            val response = apiService.getDigimons(page, pageSize, name, attribute, level, xAntibody)
+            emit(ApiResult.Success(response.digimon ?: emptyList()))
         } catch (e: Exception) {
-            emit(ApiResult.Error(e.message ?: "Error desconocido"))
+            emit(ApiResult.Error(e.localizedMessage ?: "Error desconocido"))
         }
     }
+
+
 }
