@@ -1,32 +1,34 @@
 package es.uniovi.digimonapp.ui.detail
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import es.uniovi.digimonapp.R
+import es.uniovi.digimonapp.databinding.FragmentDigimonDetailBinding
+import es.uniovi.digimonapp.domain.DigimonDetailViewModel
+import android.util.Log
+import android.widget.TextView
+import com.bumptech.glide.Glide
+import es.uniovi.digimonapp.model.NextEvolution
+import es.uniovi.digimonapp.model.PriorEvolution
+import es.uniovi.digimonapp.model.Skill
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [DigimonDetailFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class DigimonDetailFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private var _binding: FragmentDigimonDetailBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: DigimonDetailViewModel by viewModels()
+
+    // El nombre del Digimon se pasará a través del Bundle
+    private var digimonName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            digimonName = it.getString(ARG_DIGIMON_NAME) // Obtener el nombre del Digimon
         }
     }
 
@@ -34,26 +36,71 @@ class DigimonDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_digimon_detail, container, false)
+        _binding = FragmentDigimonDetailBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Observa el LiveData del ViewModel para obtener los detalles del Digimon
+        viewModel.digimonDetails.observe(viewLifecycleOwner) { digimon ->
+            digimon?.let {
+                binding.digimonName.text = it.name
+                binding.digimonLevel.text = it.levels.firstOrNull()?.level ?: "Desconocido"
+                binding.digimonAttribute.text = it.attributes.firstOrNull()?.attribute ?: "Desconocido"
+                binding.digimonType.text = it.types.firstOrNull()?.type ?: "Desconocido"
+                binding.digimonDescription.text = it.descriptions.firstOrNull { desc -> desc.language == "en_us" }?.description ?: "Descripción no disponible"
+                Glide.with(this).load(it.images.first().href).into(binding.digimonImage)
+
+                addSkills(it.skills)
+                addEvolutions(it.priorEvolutions, it.nextEvolutions)
+            }
+        }
+
+        // Carga los detalles del Digimon usando su nombre
+        digimonName?.let { viewModel.fetchDigimonDetails(it) }
+    }
+
+    private fun addSkills(skills: List<Skill>) {
+        for (skill in skills) {
+            val skillView = TextView(context).apply {
+                text = skill.skill
+            }
+            binding.digimonSkillsContainer.addView(skillView)
+        }
+    }
+
+    private fun addEvolutions(priorEvolutions: List<PriorEvolution>, nextEvolutions: List<NextEvolution>) {
+        // Agregar evoluciones previas
+        for (evolution in priorEvolutions) {
+            val evolutionView = TextView(context).apply {
+                text = evolution.digimon
+            }
+            binding.digimonPriorEvolutionsContainer.addView(evolutionView)
+        }
+        // Agregar evoluciones siguientes
+        for (evolution in nextEvolutions) {
+            val evolutionView = TextView(context).apply {
+                text = evolution.digimon
+            }
+            binding.digimonNextEvolutionsContainer.addView(evolutionView)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DigimonDetailFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+        private const val ARG_DIGIMON_NAME = "digimonName"
+
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(digimonName: String) =
             DigimonDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putString(ARG_DIGIMON_NAME, digimonName)
                 }
             }
     }

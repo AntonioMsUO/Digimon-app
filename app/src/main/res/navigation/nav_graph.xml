@@ -13,12 +13,23 @@
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_detailFragment"
+            app:destination="@id/detailFragment">
+            <argument
+                android:name="digimonName"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
         android:id="@+id/detailFragment"
         android:name="es.uniovi.digimonapp.ui.detail.DigimonDetailFragment"
-        android:label="Detalles del Digimon" />
+        android:label="Detalles del Digimon">
+        <argument
+            android:name="digimonName"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/favoritesFragment"

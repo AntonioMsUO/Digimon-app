@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import es.uniovi.digimonapp.R
 import es.uniovi.digimonapp.databinding.FragmentHomeBinding
 import es.uniovi.digimonapp.domain.HomeViewModel
+import es.uniovi.digimonapp.model.Digimon
 
 class HomeFragment : Fragment(), FilterDialogFragment.FilterDialogListener {
 
@@ -34,7 +36,14 @@ class HomeFragment : Fragment(), FilterDialogFragment.FilterDialogListener {
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
         setHasOptionsMenu(true)
 
-        val adapter = DigimonListRecyclerViewAdapter()
+        val adapter = DigimonListRecyclerViewAdapter { digimonName ->
+            // Navegar al fragmento de detalles del Digimon usando su nombre
+            val bundle = Bundle().apply {
+                putString("digimonName", digimonName)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+        }
+
         val layoutManager = LinearLayoutManager(context)
         binding.digimonList.layoutManager = layoutManager
         binding.digimonList.adapter = adapter
@@ -57,6 +66,7 @@ class HomeFragment : Fragment(), FilterDialogFragment.FilterDialogListener {
 
         viewModel.loadDigimons()
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.home_menu, menu)
@@ -100,6 +110,4 @@ class HomeFragment : Fragment(), FilterDialogFragment.FilterDialogListener {
         (requireActivity() as AppCompatActivity).setSupportActionBar(null)
         _binding = null
     }
-
-
 }

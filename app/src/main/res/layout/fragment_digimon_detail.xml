@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +10,6 @@
         android:orientation="vertical">
 
         <!--Muestra el nombre del Digimon en grande. -->
-
         <TextView
             android:id="@+id/digimon_name"
             android:layout_width="match_parent"
@@ -23,7 +21,7 @@
         <!--Muestra la imagen del Digimon. -->
         <ImageView
             android:id="@+id/digimon_image"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
              />
@@ -92,13 +90,22 @@
             android:textStyle="bold"
             android:layout_marginTop="16dp" />
 
-        <!--Muestra las evoluciones del Digimon. -->
+        <!--Muestra qué items pueden evolucionar en este Digimon. -->
         <LinearLayout
-            android:id="@+id/digimon_evolutions_container"
+            android:id="@+id/digimon_prior_evolutions_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="4dp" />
+            android:padding="8dp" />
+
+        <!--Muestra las evoluciones del Digimon. -->
+        <LinearLayout
+            android:id="@+id/digimon_next_evolutions_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp" />
+
 
     </LinearLayout>
 </ScrollView>

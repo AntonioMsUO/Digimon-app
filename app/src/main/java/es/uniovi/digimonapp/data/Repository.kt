@@ -3,6 +3,7 @@ package es.uniovi.digimonapp.data
 import es.uniovi.digimonapp.api.DigimonApiService
 import es.uniovi.digimonapp.api.RetrofitClient
 import es.uniovi.digimonapp.model.Digimon
+import es.uniovi.digimonapp.model.DigimonDetails_RootData
 import es.uniovi.digimonapp.model.RootData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -23,7 +24,17 @@ object Repository {
         emit(ApiResult.Loading(null))
         try {
             val response = apiService.getDigimons(page, pageSize, name, attribute, level, xAntibody)
-            emit(ApiResult.Success(response.digimon ?: emptyList()))
+            emit(ApiResult.Success(response.digimon))
+        } catch (e: Exception) {
+            emit(ApiResult.Error(e.localizedMessage ?: "Error desconocido"))
+        }
+    }
+
+    suspend fun getDigimonDetails(name: String): Flow<ApiResult<DigimonDetails_RootData>> = flow {
+        emit(ApiResult.Loading(null))
+        try {
+            val response = apiService.getDigimonDetails(name)
+            emit(ApiResult.Success(response))
         } catch (e: Exception) {
             emit(ApiResult.Error(e.localizedMessage ?: "Error desconocido"))
         }

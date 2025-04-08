@@ -1,7 +1,9 @@
 package es.uniovi.digimonapp.api
 
+import es.uniovi.digimonapp.model.DigimonDetails_RootData
 import es.uniovi.digimonapp.model.RootData
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface DigimonApiService {
@@ -15,4 +17,8 @@ interface DigimonApiService {
         @Query("xAntibody") xAntibody: Boolean? = null
     ): RootData
 
+    @GET("api/v1/digimon/{name}")
+    suspend fun getDigimonDetails(
+        @Path("name") name: String
+    ): DigimonDetails_RootData
 }
