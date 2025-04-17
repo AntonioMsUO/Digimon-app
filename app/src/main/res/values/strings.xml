@@ -29,4 +29,6 @@
     <string name="level_adult">Campeón</string>
     <string name="level_perfect">Perfecto</string>
     <string name="level_ultimate">Supremo</string>
+    <string name="unknown">Desconocido</string>
+    <string name="description_not_available">Descripción no disponible</string>
 </resources>
