@@ -7,42 +7,87 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import es.uniovi.digimonapp.R
+import es.uniovi.digimonapp.data.local.FavoritesRepository
 import es.uniovi.digimonapp.databinding.FragmentHomeBinding
 import es.uniovi.digimonapp.domain.HomeViewModel
-import es.uniovi.digimonapp.model.Digimon
+import es.uniovi.digimonapp.domain.HomeViewModelFactory
 
 class HomeFragment : Fragment(), FilterDialogFragment.FilterDialogListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: HomeViewModel by viewModels()
+    private lateinit var viewModel: HomeViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+
+        val appContext = requireContext().applicationContext
+        val repository = FavoritesRepository.getInstance(appContext) // Asegúrate de tener este método
+        val factory = HomeViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
+
+        // Verificar si ya hay datos cargados en el ViewModel
+        if (!viewModel.digimons.value.isNullOrEmpty()) {
+            val adapter = DigimonListRecyclerViewAdapter { digimonName ->
+                val bundle = Bundle().apply {
+                    putString("digimonName", digimonName.toString())
+                }
+                findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+            }
+
+            val layoutManager = LinearLayoutManager(context)
+            binding.digimonList.layoutManager = layoutManager
+            binding.digimonList.adapter = adapter
+
+            // Restaurar la lista y la posición del scroll
+            adapter.submitList(viewModel.digimons.value?.toList())
+            val savedPosition = viewModel.getScrollPosition()
+            binding.digimonList.scrollToPosition(savedPosition)
+        }
+
         return binding.root
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val layoutManager = binding.digimonList.layoutManager as LinearLayoutManager
+        val firstVisiblePosition = layoutManager.findFirstVisibleItemPosition()
+        viewModel.saveScrollPosition(firstVisiblePosition)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val layoutManager = binding.digimonList.layoutManager as LinearLayoutManager
+        val savedPosition = viewModel.getScrollPosition()
+        layoutManager.scrollToPosition(savedPosition)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Configurar la Toolbar del fragmento como ActionBar
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        setHasOptionsMenu(true)
 
-        val adapter = DigimonListRecyclerViewAdapter { digimonName ->
-            // Navegar al fragmento de detalles del Digimon usando su nombre
-            val bundle = Bundle().apply {
-                putString("digimonName", digimonName)
+        // Configurar el Toolbar como ActionBar
+        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+
+
+        setHasOptionsMenu(true) // Habilitar el menú de opciones para este fragmento
+
+
+        val adapter = DigimonListRecyclerViewAdapter(
+            onFavoriteClick = { digimon ->
+                viewModel.toggleFavorite(digimon) // Este método lo defines tú ahora en el ViewModel
             }
-            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
-        }
+        )
 
         val layoutManager = LinearLayoutManager(context)
         binding.digimonList.layoutManager = layoutManager
@@ -64,9 +109,11 @@ class HomeFragment : Fragment(), FilterDialogFragment.FilterDialogListener {
             }
         })
 
-        viewModel.loadDigimons()
+        // Cargar datos solo si la lista está vacía
+        if (viewModel.digimons.value.isNullOrEmpty()) {
+            viewModel.loadDigimons()
+        }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.home_menu, menu)

@@ -12,6 +12,7 @@ import es.uniovi.digimonapp.domain.DigimonDetailViewModel
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import es.uniovi.digimonapp.model.Field
 import es.uniovi.digimonapp.model.NextEvolution
@@ -32,6 +33,9 @@ class DigimonDetailFragment : Fragment() {
         arguments?.let {
             digimonName = it.getString(ARG_DIGIMON_NAME) // Obtener el nombre del Digimon
         }
+        // Ocultar el BottomNavigationView al crear el fragmento
+        val bottomNavigationView = activity?.findViewById<View>(R.id.bottom_nav_view)
+        bottomNavigationView?.visibility = View.GONE
     }
 
     override fun onCreateView(
@@ -44,6 +48,10 @@ class DigimonDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Ocultar el BottomNavigationView
+        val bottomNavigationView = activity?.findViewById<View>(R.id.bottom_nav_view)
+        bottomNavigationView?.visibility = View.GONE
 
         viewModel.digimonDetails.observe(viewLifecycleOwner) { digimon ->
             try {
@@ -103,6 +111,14 @@ class DigimonDetailFragment : Fragment() {
             Glide.with(this).load(evolution.image).into(evolutionImage)
             evolutionCondition.text = evolution.condition.ifEmpty { "Sin condición" }
 
+            // Configurar el OnClickListener para navegar al detalle del Digimon
+            evolutionView.setOnClickListener {
+                val bundle = Bundle().apply {
+                    putString("digimonName", evolution.digimon)
+                }
+                findNavController().navigate(R.id.action_digimonDetailFragment_self, bundle)
+            }
+
             binding.digimonPriorEvolutionsContainer.addView(evolutionView)
         }
 
@@ -116,6 +132,14 @@ class DigimonDetailFragment : Fragment() {
             evolutionName.text = evolution.digimon
             Glide.with(this).load(evolution.image).into(evolutionImage)
             evolutionCondition.text = evolution.condition.ifEmpty { "Sin condición" }
+
+            // Configurar el OnClickListener para navegar al detalle del Digimon
+            evolutionView.setOnClickListener {
+                val bundle = Bundle().apply {
+                    putString("digimonName", evolution.digimon)
+                }
+                findNavController().navigate(R.id.action_digimonDetailFragment_self, bundle)
+            }
 
             binding.digimonNextEvolutionsContainer.addView(evolutionView)
         }
@@ -134,8 +158,25 @@ class DigimonDetailFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Ocultar el BottomNavigationView al reanudar el fragmento
+        val bottomNavigationView = activity?.findViewById<View>(R.id.bottom_nav_view)
+        bottomNavigationView?.visibility = View.GONE
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // Restaurar el BottomNavigationView al detener el fragmento
+        val bottomNavigationView = activity?.findViewById<View>(R.id.bottom_nav_view)
+        bottomNavigationView?.visibility = View.VISIBLE
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        val bottomNavigationView = activity?.findViewById<View>(R.id.bottom_nav_view)
+        bottomNavigationView?.visibility = View.VISIBLE
+
         _binding = null
     }
 

@@ -4,5 +4,6 @@ data class Digimon(
     val href: String,
     val id: Int,
     val image: String,
-    val name: String
+    val name: String,
+    var isFavorite: Boolean = false
 )

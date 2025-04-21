@@ -12,14 +12,20 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import android.util.Log
+import es.uniovi.digimonapp.data.local.FavoritesRepository
+import es.uniovi.digimonapp.model.local.FavoriteDigimon
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val favoriteRepository: FavoritesRepository) : ViewModel() {
 
     private val _digimons = MutableLiveData<MutableList<Digimon>>()
     val digimons: LiveData<MutableList<Digimon>> get() = _digimons
+    val favorites = favoriteRepository.favorites
+
 
     private val _appUIStateObservable = MutableLiveData<AppUIState>()
     val appUIStateObservable: LiveData<AppUIState> get() = _appUIStateObservable
+    private var scrollPosition: Int = 0
+
 
     private var currentPage = 0
     private val pageSize = 20
@@ -74,6 +80,26 @@ class HomeViewModel : ViewModel() {
         }
     }
 
+    fun toggleFavorite(digimon: Digimon) {
+        viewModelScope.launch {
+            val isFav = favoriteRepository.isFavorite(digimon.name)
+            if (isFav) {
+                favoriteRepository.removeFavorite(FavoriteDigimon(digimon.name, digimon.image))
+                digimon.isFavorite = false
+            } else {
+                favoriteRepository.addFavorite(FavoriteDigimon(digimon.name, digimon.image))
+                digimon.isFavorite = true
+            }
+
+            // Forzar actualización del LiveData
+            _digimons.value = _digimons.value?.map {
+                if (it.name == digimon.name) digimon else it
+            }?.toMutableList()
+
+        }
+    }
+
+
     fun loadNextPage() {
         currentPage++
         loadDigimons(currentPage, lastFilters, append = true)
@@ -92,5 +118,14 @@ class HomeViewModel : ViewModel() {
             filters = Filters(cleanedName, cleanedAttribute, cleanedLevel, xAntibody)
         )
     }
+
+    fun saveScrollPosition(position: Int) {
+        scrollPosition = position
+    }
+
+    fun getScrollPosition(): Int {
+        return scrollPosition
+    }
+
 
 }

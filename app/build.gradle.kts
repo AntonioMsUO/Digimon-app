@@ -55,6 +55,8 @@ dependencies {
     implementation(libs.moshi.kotlin)
     implementation(libs.converter.moshi)
     implementation(libs.moshi.kotlin.codegen)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.compiler)
     annotationProcessor(libs.glide.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

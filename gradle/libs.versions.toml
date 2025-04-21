@@ -19,6 +19,8 @@ moshi = "1.15.2"
 moshiKotlinCodegen = "1.15.2"
 converterMoshi = "2.9.0"
 androidxNavigationSafeargsKotlinGradlePlugin = "2.8.9"
+roomRuntime = "2.7.0"
+roomCompiler = "2.7.0"
 
 
 [libraries]
@@ -43,6 +45,8 @@ moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.re
 converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "converterMoshi" }
 moshi-kotlin-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshiKotlinCodegen" }
 androidx-androidx-navigation-safeargs-kotlin-gradle-plugin = { group = "androidx.navigation.safeargs.kotlin", name = "androidx.navigation.safeargs.kotlin.gradle.plugin", version.ref = "androidxNavigationSafeargsKotlinGradlePlugin" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
