@@ -44,12 +44,18 @@ class FavoritesFragment : Fragment() {
         setHasOptionsMenu(true)
 
         // Adapter con navegación
-        adapter = FavoritesListAdapter { digimonName ->
-            val bundle = Bundle().apply {
-                putString("digimonName", digimonName)
+        val adapter = FavoritesListAdapter(
+            onItemClick = { digimonName ->
+                // Navegar al detalle
+                val bundle = Bundle().apply {
+                    putString("digimonName", digimonName)
+                }
+                findNavController().navigate(R.id.action_favoritesFragment_to_detailFragment, bundle)
+            },
+            onFavoriteClick = { digimon ->
+                viewModel.removeFavorite(digimon)
             }
-            findNavController().navigate(R.id.action_favoritesFragment_to_detailFragment, bundle)
-        }
+        )
 
         val layoutManager = LinearLayoutManager(context)
         binding.favoritesList.layoutManager = layoutManager

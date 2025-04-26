@@ -23,6 +23,8 @@ class HomeFragment : Fragment(), FilterDialogFragment.FilterDialogListener {
     private val binding get() = _binding!!
     private lateinit var viewModel: HomeViewModel
 
+    private lateinit var adapter: DigimonListRecyclerViewAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,19 +39,26 @@ class HomeFragment : Fragment(), FilterDialogFragment.FilterDialogListener {
 
         // Verificar si ya hay datos cargados en el ViewModel
         if (!viewModel.digimons.value.isNullOrEmpty()) {
-            val adapter = DigimonListRecyclerViewAdapter { digimonName ->
-                val bundle = Bundle().apply {
-                    putString("digimonName", digimonName.toString())
+            adapter = DigimonListRecyclerViewAdapter(
+                onItemClick = { digimonName ->
+                    val bundle = Bundle().apply {
+                        putString("digimonName", digimonName)
+                    }
+                    findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+                },
+                onFavoriteClick = { digimon, position ->
+                    viewModel.toggleFavorite(digimon)
+                    adapter.notifyItemChanged(position)
                 }
-                findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
-            }
+            )
+
 
             val layoutManager = LinearLayoutManager(context)
             binding.digimonList.layoutManager = layoutManager
             binding.digimonList.adapter = adapter
 
             // Restaurar la lista y la posición del scroll
-            adapter.submitList(viewModel.digimons.value?.toList())
+            viewModel.digimons.value?.toList()?.let { adapter.submitList(it) }
             val savedPosition = viewModel.getScrollPosition()
             binding.digimonList.scrollToPosition(savedPosition)
         }
@@ -83,11 +92,20 @@ class HomeFragment : Fragment(), FilterDialogFragment.FilterDialogListener {
         setHasOptionsMenu(true) // Habilitar el menú de opciones para este fragmento
 
 
-        val adapter = DigimonListRecyclerViewAdapter(
-            onFavoriteClick = { digimon ->
-                viewModel.toggleFavorite(digimon) // Este método lo defines tú ahora en el ViewModel
+        adapter = DigimonListRecyclerViewAdapter(
+            onItemClick = { digimonName ->
+                val bundle = Bundle().apply {
+                    putString("digimonName", digimonName)
+                }
+                findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+            },
+            onFavoriteClick = { digimon, position ->
+                viewModel.toggleFavorite(digimon)
+                adapter.notifyItemChanged(position)
             }
         )
+
+
 
         val layoutManager = LinearLayoutManager(context)
         binding.digimonList.layoutManager = layoutManager
@@ -99,6 +117,11 @@ class HomeFragment : Fragment(), FilterDialogFragment.FilterDialogListener {
                 Log.d("HomeFragment", "Datos en el Adapter: $it")
             }
         }
+
+        viewModel.favorites.observe(viewLifecycleOwner) { favorites ->
+            viewModel.updateFavoriteStatus(favorites.map { it.name })
+        }
+
 
         binding.digimonList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

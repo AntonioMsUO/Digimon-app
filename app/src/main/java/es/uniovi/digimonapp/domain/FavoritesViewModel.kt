@@ -9,14 +9,8 @@ import kotlinx.coroutines.launch
 
 class FavoritesViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: FavoritesRepository
-    val favorites: LiveData<List<FavoriteDigimon>>
-
-    init {
-        val dao = AppDatabase.getDatabase(application).favoriteDao()
-        repository = FavoritesRepository(dao)
-        favorites = repository.favorites
-    }
+    private val repository: FavoritesRepository = FavoritesRepository.getInstance(application)
+    val favorites: LiveData<List<FavoriteDigimon>> = repository.favorites
 
     fun addFavorite(digimon: FavoriteDigimon) = viewModelScope.launch {
         repository.addFavorite(digimon)
@@ -30,3 +24,4 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
         return repository.isFavorite(name)
     }
 }
+

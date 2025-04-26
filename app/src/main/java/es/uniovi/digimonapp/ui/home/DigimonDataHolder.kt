@@ -5,17 +5,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import es.uniovi.digimonapp.databinding.ItemDigimonBinding
 import es.uniovi.digimonapp.model.Digimon
-import android.util.Log
 import es.uniovi.digimonapp.R
-
 
 class DigimonDataHolder(private val binding: ItemDigimonBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(
         digimon: Digimon,
+        position: Int,
         onItemClick: (String) -> Unit,
-        onFavoriteClick: (Digimon) -> Unit
+        onFavoriteClick: (Digimon, Int) -> Unit
     ) {
         binding.digimonName.text = digimon.name
         Glide.with(binding.root.context)
@@ -36,7 +35,7 @@ class DigimonDataHolder(private val binding: ItemDigimonBinding) :
 
         // Clic en el icono de favoritos
         binding.favoriteIcon.setOnClickListener {
-            onFavoriteClick(digimon)
+            onFavoriteClick(digimon, position)
         }
     }
 }

@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import es.uniovi.digimonapp.model.local.FavoriteDigimon
 
-class FavoritesRepository private constructor(context: Context) {
+class FavoritesRepository(context: Context) {
 
-    private val favoriteDao = AppDatabase.getDatabase(context).favoriteDao()
+    val favoriteDao = AppDatabase.getDatabase(context).favoriteDao()
 
 
     val favorites: LiveData<List<FavoriteDigimon>> = favoriteDao.getAllFavorites()
@@ -25,7 +25,7 @@ class FavoritesRepository private constructor(context: Context) {
 
     companion object {
         @Volatile
-        private var INSTANCE: FavoritesRepository? = null
+        var INSTANCE: FavoritesRepository? = null
 
         fun getInstance(context: Context): FavoritesRepository {
             return INSTANCE ?: synchronized(this) {

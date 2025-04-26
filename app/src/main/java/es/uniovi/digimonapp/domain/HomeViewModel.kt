@@ -91,7 +91,7 @@ class HomeViewModel(private val favoriteRepository: FavoritesRepository) : ViewM
                 digimon.isFavorite = true
             }
 
-            // Forzar actualización del LiveData
+            // Actualiza la lista de Digimons en el LiveData
             _digimons.value = _digimons.value?.map {
                 if (it.name == digimon.name) digimon else it
             }?.toMutableList()
@@ -118,6 +118,13 @@ class HomeViewModel(private val favoriteRepository: FavoritesRepository) : ViewM
             filters = Filters(cleanedName, cleanedAttribute, cleanedLevel, xAntibody)
         )
     }
+
+    fun updateFavoriteStatus(favoriteNames: List<String>) {
+        _digimons.value = _digimons.value?.map { digimon ->
+            digimon.copy(isFavorite = favoriteNames.contains(digimon.name))
+        }?.toMutableList()
+    }
+
 
     fun saveScrollPosition(position: Int) {
         scrollPosition = position
