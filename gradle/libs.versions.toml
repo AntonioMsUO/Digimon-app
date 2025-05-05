@@ -1,5 +1,5 @@
 [versions]
-agp = "8.9.1"
+agp = "8.8.2"
 kotlin = "2.1.10"
 coreKtx = "1.6.0"
 junit = "4.13.2"
@@ -21,6 +21,7 @@ converterMoshi = "2.9.0"
 androidxNavigationSafeargsKotlinGradlePlugin = "2.8.9"
 roomRuntime = "2.7.0"
 roomCompiler = "2.7.0"
+preference = "1.2.1"
 
 
 [libraries]
@@ -47,6 +48,7 @@ moshi-kotlin-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-code
 androidx-androidx-navigation-safeargs-kotlin-gradle-plugin = { group = "androidx.navigation.safeargs.kotlin", name = "androidx.navigation.safeargs.kotlin.gradle.plugin", version.ref = "androidxNavigationSafeargsKotlinGradlePlugin" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
+androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
