@@ -3,46 +3,125 @@
 ## Descripción  
 Digimon Dex es una aplicación basada en la API [Digi-API](https://digi-api.com/) que permite explorar información detallada sobre los Digimon de la franquicia, incluyendo sus características, evoluciones y ubicación representativa en un mapa.  
 
-## Funcionalidades  
+## Arquitectura
+La arquitectura de la app sigue el patrón MVVM (Model-View-ViewModel) y está organizada en capas bien diferenciadas para separar la lógica de negocio, la gestión de datos y la interfaz de usuario. 
+A continuación se describe cada parte y su interacción:
 
-### Pantalla de Inicio  
-- **Mensaje de bienvenida** al abrir la aplicación.  
-- **Navegación rápida** a las principales secciones: Listado de Digimon, Favoritos, Mapa y Configuración.  
+**1. Capa de Modelo (Model)**
+- Incluye las clases de datos (`Digimon`, `DigimonDetails_RootData`, `Attribute`, `Level`, `Type`, etc.) que representan la información de los Digimon y sus detalles, así como las entidades de la base de datos local (`FavoriteDigimon`).
+- Los modelos son simples data classes, algunos implementan `Parcelable` para facilitar el paso de datos entre fragmentos.
 
-### Listado de Digimon  
-- Muestra un **listado completo** de los 1460 Digimon disponibles en Digi-API.  
-- Cada Digimon se muestra con su **imagen, nombre, nivel y atributos principales**.  
-- **Búsqueda** por nombre, nivel, atributo y familia.  
-- **Filtros** para encontrar Digimon según características específicas.  
+**2. Capa de Datos (Data)**
+- **Acceso a API:**  
+  - `DigimonApiService` define las llamadas a la Digi-API usando Retrofit.
+  - `RetrofitClient` configura Retrofit y Moshi para la serialización JSON.
+  - `Repository` centraliza el acceso a la API y expone métodos suspendidos que devuelven flujos (`Flow`) de resultados envueltos en `ApiResult` (éxito, error, cargando).
+- **Persistencia local:**  
+  - Se usa Room para almacenar favoritos.  
+  - `AppDatabase` define la base de datos y el DAO (`FavoriteDigimonDao`) para operaciones CRUD sobre favoritos.
+  - `FavoritesRepository` expone métodos para añadir, eliminar y consultar favoritos, y mantiene un `LiveData` reactivo con la lista de favoritos.
 
-### Detalle de Digimon  
-- Información detallada de cada Digimon:  
-  - Imágenes oficiales.  
-  - Nivel, atributos y familias.  
-  - Posibles evoluciones y pre-evoluciones.  
-- **Mapa de evolución** interactivo para visualizar las posibles ramificaciones evolutivas.  
+**3. Capa de Dominio (ViewModel)**
+- **`HomeViewModel`:**  
+  - Gestiona la lista principal de Digimon, la paginación, los filtros y la sincronización con los favoritos.
+  - Expone `LiveData` para la lista de Digimon, el estado de la UI y los favoritos.
+  - Permite alternar el estado de favorito y aplicar filtros.
+- **`DigimonDetailViewModel`:**  
+  - Gestiona la obtención y exposición de los detalles de un Digimon concreto.
+  - Expone un `LiveData` con los detalles.
+- **`FavoritesViewModel`:**  
+  - Gestiona la lista de favoritos y expone métodos para añadir/eliminar favoritos y consultar si un Digimon es favorito.
 
-### Mapa Interactivo  
-- Muestra una ubicación representativa de cada Digimon en un **mapa interactivo**.  
-- Cada marcador ofrece una breve descripción del Digimon y acceso a su ficha detallada.  
+**4. Capa de Interfaz de Usuario (UI)**
+- **Fragments:**  
+  - `HomeFragment`: Muestra la lista principal, permite buscar, filtrar y marcar favoritos.
+  - `DigimonDetailFragment`: Muestra los detalles de un Digimon, sus evoluciones, habilidades y permite navegar al mapa.
+  - `FavoritesFragment`: Muestra la lista de favoritos y permite eliminarlos.
+  - `MapFragment`: Muestra un mapa con marcadores según las familias del Digimon.
+  - `SettingsFragment`: Permite cambiar tema e idioma.
+- **Adapters y ViewHolders:**  
+  - Adaptadores para listas (`DigimonListRecyclerViewAdapter`, `FavoritesListAdapter`) y sus respectivos ViewHolders para mostrar los datos.
+- **Diálogos:**  
+  - `FilterDialogFragment` permite aplicar filtros avanzados a la lista de Digimon.
 
-### Favoritos  
-- Permite **marcar Digimon como favoritos** para acceder rápidamente a ellos.  
-- Gestión de favoritos: añadir y eliminar Digimon de la lista.  
+**5. Navegación y Configuración**
+- Se usa Navigation Component para la navegación entre fragmentos.
+- `MainActivity` gestiona la barra de navegación inferior y aplica el idioma guardado.
+- `DigimonApp` inicializa el tema y el idioma según las preferencias del usuario.
 
-### Configuración  
-- **Selección de idioma** (Español/Inglés).  
-- **Modo claro/oscuro**.  
-- Configuración de preferencias del usuario.  
+**6. Utilidades**
+- `LocaleHelper` gestiona el cambio de idioma de la app.
 
-### Almacenamiento y Conectividad  
-- Uso de **Room** para almacenamiento local, permitiendo acceso offline.  
-- **Sincronización automática** cuando hay conexión a internet.  
+**Resumen de flujo de datos:**
+- La UI observa los datos expuestos por los ViewModel mediante `LiveData`.
+- Los ViewModel obtienen los datos del `Repository` (API o base de datos local).
+- Los cambios en favoritos se reflejan automáticamente en la UI gracias a la reactividad de Room y LiveData.
+- La navegación y la configuración de la app están centralizadas y desacopladas de la lógica de negocio.
 
-## Requisitos Técnicos  
-- Compatible con **API 21+** (mínimo Nexus 7 y teléfonos Android antiguos).  
-- Arquitectura **MVVM** con separación en paquetes.  
-- Uso de **Navigation Component** y **fragmentos**.  
-- Código en **Kotlin**, legible y comentado.  
-- Uso de imágenes con licencia adecuada.  
-- Implementación de **pruebas de UI**.  
+## Mapa de relaciones entre clases
+```mermaid
+classDiagram
+    DigimonApp --> LocaleHelper
+    MainActivity --> LocaleHelper
+    MainActivity --> ActivityMainBinding
+    MainActivity --> NavHostFragment
+    MainActivity --> MainActivity
+    MainActivity --> R
+    MainActivity --> AppCompatActivity
+
+    HomeFragment --> HomeViewModel
+    HomeFragment --> DigimonListRecyclerViewAdapter
+    HomeFragment --> FavoritesRepository
+    HomeFragment --> FilterDialogFragment
+    HomeFragment --> FragmentHomeBinding
+
+    HomeViewModel --> Repository
+    HomeViewModel --> FavoritesRepository
+    HomeViewModel --> AppUIState
+    HomeViewModel --> Digimon
+
+    Repository --> RetrofitClient
+    Repository --> ApiResult
+    Repository --> DigimonApiService
+
+    RetrofitClient --> DigimonApiService
+
+    DigimonApiService --> RootData
+    DigimonApiService --> DigimonDetails_RootData
+
+    FavoritesRepository --> AppDatabase
+    FavoritesRepository --> FavoriteDigimonDao
+    FavoritesRepository --> FavoriteDigimon
+
+    AppDatabase --> FavoriteDigimonDao
+    AppDatabase --> FavoriteDigimon
+
+    FavoriteDigimonDao --> FavoriteDigimon
+
+    FavoritesViewModel --> FavoritesRepository
+    FavoritesViewModel --> FavoriteDigimon
+
+    DigimonDetailViewModel --> Repository
+    DigimonDetailViewModel --> DigimonDetails_RootData
+
+    DigimonDetails_RootData --> Image
+    DigimonDetails_RootData --> Level
+    DigimonDetails_RootData --> Type
+    DigimonDetails_RootData --> Attribute
+    DigimonDetails_RootData --> Field
+    DigimonDetails_RootData --> Description
+    DigimonDetails_RootData --> Skill
+    DigimonDetails_RootData --> PriorEvolution
+    DigimonDetails_RootData --> NextEvolution
+
+    FavoritesFragment --> FavoritesViewModel
+    FavoritesFragment --> FavoritesListAdapter
+    FavoritesFragment --> FragmentFavoritesBinding
+
+    FavoritesListAdapter --> FavoriteDigimon
+
+    MapFragment --> DigimonDetails_RootData
+
+    SettingsFragment --> LocaleHelper
+
+
