@@ -40,7 +40,7 @@ Digimon Dex es una aplicación basada en la API [Digi-API](https://digi-api.com/
 - **Sincronización automática** cuando hay conexión a internet.  
 
 ## Requisitos Técnicos  
-- Compatible con **API 16+** (mínimo Nexus 7 y teléfonos Android antiguos).  
+- Compatible con **API 21+** (mínimo Nexus 7 y teléfonos Android antiguos).  
 - Arquitectura **MVVM** con separación en paquetes.  
 - Uso de **Navigation Component** y **fragmentos**.  
 - Código en **Kotlin**, legible y comentado.  
