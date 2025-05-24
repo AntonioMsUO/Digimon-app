@@ -13,11 +13,14 @@ import kotlinx.coroutines.launch
 import android.util.Log
 import es.uniovi.digimonapp.ui.AppUIState
 
+// ViewModel encargado de gestionar y exponer los detalles de un Digimon a la UI
 class DigimonDetailViewModel : ViewModel() {
 
+    // LiveData que contiene los detalles del Digimon
     private val _digimonDetails = MutableLiveData<DigimonDetails_RootData?>()
     val digimonDetails: LiveData<DigimonDetails_RootData?> get() = _digimonDetails
 
+    // Método para obtener los detalles de un Digimon por su nombre
     fun fetchDigimonDetails(digimonName: String) {
         viewModelScope.launch {
             Repository.getDigimonDetails(digimonName)
@@ -30,7 +33,7 @@ class DigimonDetailViewModel : ViewModel() {
                         is ApiResult.Loading -> AppUIState.Loading(true)
                     }
                 }
-                .collect() // Recoger el flujo de resultados
+                .collect() // Recoge el flujo de resultados
         }
     }
 }

@@ -11,12 +11,15 @@ import com.google.android.material.color.MaterialColors
 import es.uniovi.digimonapp.R
 import androidx.core.content.edit
 
+// Fragmento de preferencias para la pantalla de ajustes de la app
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
+    // Infla las preferencias desde el archivo XML
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
     }
 
+    // Cambia el color de fondo según el tema actual
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.setBackgroundColor(
@@ -24,18 +27,22 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         )
     }
 
+    // Registra el listener para cambios en las preferencias al reanudar el fragmento
     override fun onResume() {
         super.onResume()
         preferenceScreen.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
     }
 
+    // Elimina el listener al pausar el fragmento para evitar fugas de memoria
     override fun onPause() {
         preferenceScreen.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
         super.onPause()
     }
 
+    // Responde a los cambios en las preferencias
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         when (key) {
+            // Cambia el tema de la app según la preferencia seleccionada
             "theme_preference" -> {
                 when (sharedPreferences?.getString(key, "auto")) {
                     "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -44,7 +51,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 }
                 activity?.recreate()
             }
-
+            // Cambia el idioma de la app y lo guarda en preferencias
             "language_preference" -> {
                 val lang = sharedPreferences?.getString(key, "es")
                 saveLanguageToAppPrefs(lang)
@@ -53,11 +60,10 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
     }
 
+    // Guarda el idioma seleccionado en las preferencias de la app
     private fun saveLanguageToAppPrefs(languageCode: String?) {
         languageCode ?: return
         val appPrefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         appPrefs.edit() { putString("app_language", languageCode) }
     }
-
-
 }

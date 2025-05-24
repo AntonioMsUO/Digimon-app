@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import es.uniovi.digimonapp.R
 import es.uniovi.digimonapp.model.DigimonDetails_RootData
 
+// Fragmento que muestra un mapa con marcadores según las familias del Digimon recibido
 class MapFragment : Fragment() {
 
     private val TAG = "MapFragment"
@@ -19,6 +20,7 @@ class MapFragment : Fragment() {
     private lateinit var mapImageView: ImageView
     private lateinit var markerContainer: FrameLayout
 
+    // Relaciona familias con ubicaciones del mapa
     private val familyToLocations = mapOf(
         "Nature Spirits" to listOf("Gear Savanna", "Night Canyon", "Primary Village"),
         "Deep Savers" to listOf("Dragon's Eye Lake", "Ice Sanctuary"),
@@ -32,6 +34,7 @@ class MapFragment : Fragment() {
         "Jungle Troopers" to listOf("Ancient Dino Valley")
     )
 
+    // Coordenadas relativas de cada ubicación en el mapa (valores entre 0 y 1)
     private val locationCoordinates = mapOf(
         "Primary Village" to Pair(0.5f, 0.682f),
         "File City" to Pair(0.5f, 0.587f),
@@ -51,11 +54,13 @@ class MapFragment : Fragment() {
         "Mt. Infinity" to Pair(0.295f, 0.444f)
     )
 
+    // Fuerza la orientación horizontal al entrar en el fragmento
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
 
+    // Infla el layout y obtiene referencias a la imagen del mapa y el contenedor de marcadores
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,6 +71,7 @@ class MapFragment : Fragment() {
         return root
     }
 
+    // Al crear la vista, coloca los marcadores según las familias del Digimon recibido
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val digimon = arguments?.getParcelable<DigimonDetails_RootData>("digimon") ?: run {
             Log.e(TAG, "No se recibió el Digimon en los argumentos")
@@ -73,13 +79,16 @@ class MapFragment : Fragment() {
         }
 
         Log.d(TAG, "Digimon recibido: ${digimon.name}")
+        // Oculta la barra de navegación inferior
         val bottomNavigationView = activity?.findViewById<View>(R.id.bottom_nav_view)
         bottomNavigationView?.visibility = View.GONE
 
+        // Muestra la imagen del mapa
         mapImageView.setImageResource(R.drawable.map)
 
         val shownLocations = mutableSetOf<String>()
 
+        // Por cada familia, añade sus ubicaciones al conjunto a mostrar
         digimon.fields.forEach { field ->
             val family = field.field
             val locations = familyToLocations[family]
@@ -91,6 +100,7 @@ class MapFragment : Fragment() {
             }
         }
 
+        // Cuando la imagen del mapa ya tiene tamaño, coloca los marcadores
         mapImageView.post {
             val width = mapImageView.width
             val height = mapImageView.height
@@ -108,22 +118,22 @@ class MapFragment : Fragment() {
 
                 Log.d(TAG, "Mostrando marcador en '$location': x=$x, y=$y")
 
-                if (!isAdded) return@post // o return@observe, o return@launch, etc.
+                if (!isAdded) return@post
 
+                // Infla el layout del marcador y lo posiciona
                 val marker = LayoutInflater.from(requireContext()).inflate(R.layout.map_marker, markerContainer, false)
-                marker.rotation = 45f // Gira 45 grados a la izquierda
+                marker.rotation = 45f // Gira el marcador 45 grados
                 marker.x = x
                 marker.y = y
                 markerContainer.addView(marker)
                 Log.d(TAG, "Marcador añadido para '$location'")
-
             }
         }
     }
 
+    // Restaura la orientación al salir del fragmento
     override fun onDestroyView() {
         super.onDestroyView()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
-
 }

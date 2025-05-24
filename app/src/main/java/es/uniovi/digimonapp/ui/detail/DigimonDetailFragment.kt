@@ -19,28 +19,32 @@ import es.uniovi.digimonapp.model.NextEvolution
 import es.uniovi.digimonapp.model.PriorEvolution
 import es.uniovi.digimonapp.model.Skill
 
+// Fragmento encargado de mostrar el detalle de un Digimon seleccionado
 class DigimonDetailFragment : Fragment() {
 
+    // ViewBinding para acceder a las vistas del layout de forma segura
     private var _binding: FragmentDigimonDetailBinding? = null
     private val binding get() = _binding!!
+
+    // ViewModel asociado al fragmento para gestionar los datos del Digimon
     private val viewModel: DigimonDetailViewModel by viewModels()
 
-    // El nombre del Digimon se pasará a través del Bundle
+    // Nombre del Digimon recibido por argumentos (Bundle)
     private var digimonName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Recupera el nombre del Digimon de los argumentos del fragmento
         arguments?.let {
-            digimonName = it.getString(ARG_DIGIMON_NAME) // Obtener el nombre del Digimon
+            digimonName = it.getString(ARG_DIGIMON_NAME)
         }
     }
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Infla el layout usando ViewBinding
         _binding = FragmentDigimonDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -48,25 +52,29 @@ class DigimonDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        // Observa los detalles del Digimon y actualiza la UI cuando cambian
         viewModel.digimonDetails.observe(viewLifecycleOwner) { digimon ->
             try {
                 digimon?.let {
+                    // Muestra los datos principales del Digimon
                     binding.digimonName.text = it.name
                     binding.digimonLevel.text = it.levels.firstOrNull()?.level ?: getString(R.string.unknown)
                     binding.digimonAttribute.text = it.attributes.firstOrNull()?.attribute ?: getString(R.string.unknown)
                     binding.digimonType.text = it.types.firstOrNull()?.type ?: getString(R.string.unknown)
                     binding.digimonDescription.text = it.descriptions.firstOrNull { desc -> desc.language == "en_us" }?.description ?: getString(R.string.description_not_available)
 
+                    // Carga la imagen del Digimon (o un placeholder si no hay imagen)
                     Glide.with(this)
                         .load(it.images.firstOrNull()?.href ?: R.drawable.placeholder_image)
                         .into(binding.digimonImage)
 
+                    // Limpia los contenedores antes de añadir los nuevos elementos
                     binding.digimonSkillsDescriptionContainer.removeAllViews()
                     binding.digimonPriorEvolutionsContainer.removeAllViews()
                     binding.digimonNextEvolutionsContainer.removeAllViews()
                     binding.digimonFieldsContainer.removeAllViews()
 
+                    // Añade las habilidades, evoluciones y campos a la UI
                     addSkills(it.skills)
                     addEvolutions(it.priorEvolutions, it.nextEvolutions)
                     addFields(it.fields)
@@ -76,6 +84,7 @@ class DigimonDetailFragment : Fragment() {
             }
         }
 
+        // Botón para mostrar el mapa con la localización del Digimon
         binding.showMapButton.setOnClickListener {
             viewModel.digimonDetails.value?.let { digimon ->
                 val bundle = Bundle().apply {
@@ -85,14 +94,13 @@ class DigimonDetailFragment : Fragment() {
             }
         }
 
-
-
+        // Solicita los detalles del Digimon al ViewModel si el nombre es válido
         digimonName?.let {
             viewModel.fetchDigimonDetails(it)
         } ?: Log.e("DigimonDetailFragment", "El nombre del Digimon es nulo")
     }
 
-
+    // Añade las habilidades del Digimon al contenedor correspondiente
     private fun addSkills(skills: List<Skill>) {
         for (skill in skills) {
             val skillView = LayoutInflater.from(context).inflate(R.layout.item_skill, binding.digimonSkillsDescriptionContainer, false)
@@ -106,6 +114,7 @@ class DigimonDetailFragment : Fragment() {
         }
     }
 
+    // Añade las evoluciones previas y siguientes del Digimon a la UI
     private fun addEvolutions(priorEvolutions: List<PriorEvolution>, nextEvolutions: List<NextEvolution>) {
         // Evoluciones previas
         for (evolution in priorEvolutions) {
@@ -118,7 +127,7 @@ class DigimonDetailFragment : Fragment() {
             Glide.with(this).load(evolution.image).into(evolutionImage)
             evolutionCondition.text = evolution.condition.ifEmpty { "Sin condición" }
 
-            // Configurar el OnClickListener para navegar al detalle del Digimon
+            // Permite navegar al detalle de la evolución seleccionada
             evolutionView.setOnClickListener {
                 val bundle = Bundle().apply {
                     putString("digimonName", evolution.digimon)
@@ -140,7 +149,7 @@ class DigimonDetailFragment : Fragment() {
             Glide.with(this).load(evolution.image).into(evolutionImage)
             evolutionCondition.text = evolution.condition.ifEmpty { "Sin condición" }
 
-            // Configurar el OnClickListener para navegar al detalle del Digimon
+            // Permite navegar al detalle de la evolución seleccionada
             evolutionView.setOnClickListener {
                 val bundle = Bundle().apply {
                     putString("digimonName", evolution.digimon)
@@ -152,6 +161,7 @@ class DigimonDetailFragment : Fragment() {
         }
     }
 
+    // Añade los campos (fields) del Digimon a la UI
     private fun addFields(fields: List<Field>) {
         for (field in fields) {
             val fieldView = LayoutInflater.from(context).inflate(R.layout.item_field, binding.digimonFieldsContainer, false)
@@ -165,14 +175,14 @@ class DigimonDetailFragment : Fragment() {
         }
     }
 
-
+    // Libera el binding para evitar fugas de memoria
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     companion object {
+        // Clave para pasar el nombre del Digimon por argumentos
         private const val ARG_DIGIMON_NAME = "digimonName"
-
     }
 }

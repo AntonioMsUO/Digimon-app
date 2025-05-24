@@ -10,15 +10,18 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import es.uniovi.digimonapp.databinding.ActivityMainBinding
 
+// Actividad principal que gestiona la navegación y la configuración visual de la app
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    // Aplica el idioma guardado antes de crear el contexto base
     override fun attachBaseContext(newBase: Context) {
         val context = es.uniovi.digimonapp.util.LocaleHelper.applySavedLanguage(newBase)
         super.attachBaseContext(context)
     }
 
+    // Configura la ventana, la navegación y la visibilidad de la barra inferior
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -30,10 +33,10 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // Asociar el BottomNavigationView con NavController
+        // Asocia el BottomNavigationView con el NavController
         binding.bottomNavView.setupWithNavController(navController)
 
-        // Controlar visibilidad del BottomNavigationView según destino
+        // Controla la visibilidad del BottomNavigationView según el destino
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.detailFragment,

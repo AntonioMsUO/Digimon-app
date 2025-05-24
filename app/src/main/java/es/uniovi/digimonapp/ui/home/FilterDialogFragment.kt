@@ -9,8 +9,10 @@ import androidx.fragment.app.DialogFragment
 import es.uniovi.digimonapp.R
 import es.uniovi.digimonapp.databinding.FragmentFilterDialogBinding
 
+// Diálogo para filtrar la lista de Digimon por nombre, atributo, nivel y X-Antibody
 class FilterDialogFragment : DialogFragment() {
 
+    // Interfaz para comunicar el filtro aplicado al fragmento que lo invoca
     interface FilterDialogListener {
         fun onFilterApplied(name: String?, attribute: String?, level: String?, xAntibody: Boolean?)
     }
@@ -19,10 +21,12 @@ class FilterDialogFragment : DialogFragment() {
     private var _binding: FragmentFilterDialogBinding? = null
     private val binding get() = _binding!!
 
+    // Permite establecer el listener desde el fragmento que muestra el diálogo
     fun setFilterDialogListener(listener: FilterDialogListener) {
         this.listener = listener
     }
 
+    // Ajusta el tamaño del diálogo al iniciarse
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(
@@ -31,7 +35,7 @@ class FilterDialogFragment : DialogFragment() {
         )
     }
 
-
+    // Infla el layout del diálogo usando ViewBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,15 +44,19 @@ class FilterDialogFragment : DialogFragment() {
         return binding.root
     }
 
+    // Configura los spinners y el botón de aplicar filtro
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Prepara las opciones de atributo y nivel (añadiendo "Todos" al principio)
         val attributeDisplay = listOf(getString(R.string.all_option)) + resources.getStringArray(R.array.attribute_display).toList()
         val levelDisplay = listOf(getString(R.string.all_option)) + resources.getStringArray(R.array.level_display).toList()
 
+        // Asigna los adaptadores a los spinners
         binding.attributeSpinner.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, attributeDisplay)
         binding.levelSpinner.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, levelDisplay)
 
+        // Al pulsar "Aplicar", recoge los filtros seleccionados y los envía al listener
         binding.applyButton.setOnClickListener {
             val name = binding.nameEditText.text.toString().takeIf { it.isNotBlank() }
             val attributeIndex = binding.attributeSpinner.selectedItemPosition - 1 // quitamos "Todos"
@@ -63,7 +71,7 @@ class FilterDialogFragment : DialogFragment() {
         }
     }
 
-
+    // Libera el binding para evitar fugas de memoria
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
