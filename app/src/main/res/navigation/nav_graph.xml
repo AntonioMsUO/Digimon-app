@@ -32,6 +32,12 @@
         <action
             android:id="@+id/action_digimonDetailFragment_self"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/action_digimonDetailFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_detailFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 
     <fragment
@@ -47,4 +53,8 @@
         android:id="@+id/settingsFragment"
         android:name="es.uniovi.digimonapp.ui.settings.SettingsFragment"
         android:label="Configuración" />
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="es.uniovi.digimonapp.ui.map.MapFragment"
+        android:label="MapFragment" />
 </navigation>

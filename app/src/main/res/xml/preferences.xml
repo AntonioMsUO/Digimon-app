@@ -3,16 +3,16 @@
 
     <ListPreference
         android:key="theme_preference"
-        android:title="Tema"
-        android:summary="Selecciona el tema de la aplicación"
+        android:title="@string/theme_title"
+        android:summary="@string/theme_summary"
         android:entries="@array/theme_options"
         android:entryValues="@array/theme_values"
         android:defaultValue="auto" />
 
     <ListPreference
         android:key="language_preference"
-        android:title="Idioma"
-        android:summary="Selecciona el idioma de la app"
+        android:title="@string/language_title"
+        android:summary="@string/language_summary"
         android:entries="@array/language_options"
         android:entryValues="@array/language_values"
         android:defaultValue="es" />

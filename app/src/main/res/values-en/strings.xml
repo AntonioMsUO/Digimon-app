@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Digimon App</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_message">Digital Analyzer</string>
+    <string name="digimon_list_btn">Digimon List</string>
+    <string name="favorite_digimon_btn">Favorites</string>
+    <string name="settings_btn">Settings</string>
+    <string name="filter">Filter</string>
+    <string name="search">Search</string>
+    <string name="x_antibody">X-Antibody</string>
+    <string name="search_by_name">Name</string>
+    <string name="apply">Apply</string>
+    <string name="attribute_prompt">Select Attribute</string>
+    <string name="level_prompt">Select level</string>
+
+
+
+    <string name="all_option">All</string>
+
+    <!-- Attributes -->
+    <string name="attribute_data">Data</string>
+    <string name="attribute_vaccine">Vaccine</string>
+    <string name="attribute_virus">Virus</string>
+
+    <!-- Levels -->
+    <string name="level_baby1">Baby I</string>
+    <string name="level_baby2">Baby II</string>
+    <string name="level_child">Rookie</string>
+    <string name="level_adult">Champion</string>
+    <string name="level_perfect">Perfect</string>
+    <string name="level_ultimate">Mega</string>
+    <string name="unknown">Unknown</string>
+    <string name="description_not_available">Not available</string>
+    <string name="favorites">Favorites</string>
+    <string name="inicio">Home</string>
+    <string name="favoritos">Favorites</string>
+    <string name="configuraci_n">Settings</string>
+    <string name="atributo">Attribute</string>
+    <string name="campos">Fields</string>
+    <string name="tipo">Type</string>
+    <string name="descripci_n">Description</string>
+    <string name="habilidades">Attacks</string>
+    <string name="evoluciones_previas">Pre-Evolutions</string>
+    <string name="evolutions">Evolutions</string>
+    <string name="ver_en_el_mapa">See on map</string>
+
+    <string name="nivel">Stage</string>
+    <string name="imagen_del_digimon">Digimon Image</string>
+
+    <string name="mapa">File Island Map</string>
+    <string name="marcador">Marker</string>
+    <string name="clear_theme">Light</string>
+    <string name="dark_theme">Dark</string>
+    <string name="automatic_theme">Automatic</string>
+    <string name="spanish_language">Spanish</string>
+    <string name="english_language">English</string>
+    <string name="theme_title">Theme</string>
+    <string name="language_title">Language</string>
+    <string name="theme_summary">Select the application theme</string>
+    <string name="language_summary">Select the application language</string>
+
+</resources>

@@ -1,15 +1,14 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/ic_home"
-        android:title="Inicio" />
+        android:title="@string/inicio" />
     <item
         android:id="@+id/favoritesFragment"
         android:icon="@drawable/ic_favorite_border"
-        android:title="Favoritos" />
+        android:title="@string/favoritos" />
     <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
-        android:title="Configuración" />
+        android:title="@string/configuraci_n" />
 </menu>

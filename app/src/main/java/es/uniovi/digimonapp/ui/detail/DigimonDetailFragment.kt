@@ -33,15 +33,14 @@ class DigimonDetailFragment : Fragment() {
         arguments?.let {
             digimonName = it.getString(ARG_DIGIMON_NAME) // Obtener el nombre del Digimon
         }
-        // Ocultar el BottomNavigationView al crear el fragmento
-        val bottomNavigationView = activity?.findViewById<View>(R.id.bottom_nav_view)
-        bottomNavigationView?.visibility = View.GONE
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentDigimonDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -49,9 +48,6 @@ class DigimonDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Ocultar el BottomNavigationView
-        val bottomNavigationView = activity?.findViewById<View>(R.id.bottom_nav_view)
-        bottomNavigationView?.visibility = View.GONE
 
         viewModel.digimonDetails.observe(viewLifecycleOwner) { digimon ->
             try {
@@ -79,6 +75,17 @@ class DigimonDetailFragment : Fragment() {
                 Log.e("DigimonDetailFragment", "Error al procesar los detalles del Digimon", e)
             }
         }
+
+        binding.showMapButton.setOnClickListener {
+            viewModel.digimonDetails.value?.let { digimon ->
+                val bundle = Bundle().apply {
+                    putParcelable("digimon", digimon)
+                }
+                findNavController().navigate(R.id.action_digimonDetailFragment_to_mapFragment, bundle)
+            }
+        }
+
+
 
         digimonName?.let {
             viewModel.fetchDigimonDetails(it)
@@ -158,37 +165,14 @@ class DigimonDetailFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        // Ocultar el BottomNavigationView al reanudar el fragmento
-        val bottomNavigationView = activity?.findViewById<View>(R.id.bottom_nav_view)
-        bottomNavigationView?.visibility = View.GONE
-    }
-
-    override fun onStop() {
-        super.onStop()
-        // Restaurar el BottomNavigationView al detener el fragmento
-        val bottomNavigationView = activity?.findViewById<View>(R.id.bottom_nav_view)
-        bottomNavigationView?.visibility = View.VISIBLE
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        val bottomNavigationView = activity?.findViewById<View>(R.id.bottom_nav_view)
-        bottomNavigationView?.visibility = View.VISIBLE
-
         _binding = null
     }
 
     companion object {
         private const val ARG_DIGIMON_NAME = "digimonName"
 
-        @JvmStatic
-        fun newInstance(digimonName: String) =
-            DigimonDetailFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_DIGIMON_NAME, digimonName)
-                }
-            }
     }
 }

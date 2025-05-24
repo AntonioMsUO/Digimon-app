@@ -3,21 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/digivice_background"
+    android:background="@drawable/background_gradient"
     app:cardCornerRadius="16dp"
     app:cardElevation="8dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/digivice_background"
+        android:background="@drawable/background_gradient"
         android:padding="16dp">
 
         <!-- ICONO FAVORITO -->
         <ImageView
             android:id="@+id/favorite_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="4dp"
@@ -36,8 +36,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:background="@android:color/transparent"
-            android:clipToOutline="true"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/imagen_del_digimon"/>
 
         <!-- NOMBRE DEL DIGIMON -->
         <TextView

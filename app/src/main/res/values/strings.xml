@@ -32,5 +32,24 @@
     <string name="unknown">Desconocido</string>
     <string name="description_not_available">Descripción no disponible</string>
     <string name="favorites">Favoritos</string>
+    <string name="inicio">Inicio</string>
+    <string name="favoritos">Favoritos</string>
+    <string name="configuraci_n">Configuración</string>
+    <string name="atributo">Atributo</string>
+    <string name="campos">Campos</string>
+    <string name="tipo">Tipo</string>
+    <string name="descripci_n">Descripción</string>
+    <string name="habilidades">Habilidades</string>
+    <string name="evoluciones_previas">Evoluciones Previas</string>
+    <string name="evolutions">Evolutions</string>
+    <string name="ver_en_el_mapa">Ver en el mapa</string>
+    <string name="nivel">Nivel</string>
+    <string name="imagen_del_digimon">Imagen del digimon</string>
+    <string name="mapa">Mapa de la isla File</string>
+    <string name="marcador">Marcador</string>
+    <string name="theme_title">Tema</string>
+    <string name="language_title">Idioma</string>
+    <string name="theme_summary">Selecciona el tema de la aplicación</string>
+    <string name="language_summary">Selecciona el idioma de la aplicación</string>
 
 </resources>

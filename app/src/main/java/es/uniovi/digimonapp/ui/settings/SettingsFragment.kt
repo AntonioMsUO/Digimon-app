@@ -1,17 +1,15 @@
 package es.uniovi.digimonapp.ui.settings
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
-import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
 import com.google.android.material.color.MaterialColors
 import es.uniovi.digimonapp.R
-import java.util.*
+import androidx.core.content.edit
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -42,26 +40,24 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 when (sharedPreferences?.getString(key, "auto")) {
                     "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                     "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    "auto" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                    else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 }
+                activity?.recreate()
             }
 
             "language_preference" -> {
                 val lang = sharedPreferences?.getString(key, "es")
-                setLocale(lang)
-                activity?.recreate() // Para aplicar idioma en tiempo real
+                saveLanguageToAppPrefs(lang)
+                activity?.recreate()
             }
         }
     }
 
-    private fun setLocale(languageCode: String?) {
+    private fun saveLanguageToAppPrefs(languageCode: String?) {
         languageCode ?: return
-        val locale = Locale(languageCode)
-        Locale.setDefault(locale)
-
-        val config = resources.configuration
-        config.setLocale(locale)
-        resources.updateConfiguration(config, resources.displayMetrics)
-        activity?.applicationContext?.resources?.updateConfiguration(config, resources.displayMetrics)
+        val appPrefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        appPrefs.edit() { putString("app_language", languageCode) }
     }
+
+
 }

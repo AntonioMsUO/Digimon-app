@@ -31,9 +31,9 @@
     </string-array>
 
     <string-array name="theme_options">
-        <item>Claro</item>
-        <item>Oscuro</item>
-        <item>Automático</item>
+        <item>@string/clear_theme</item>
+        <item>@string/dark_theme</item>
+        <item>@string/automatic_theme</item>
     </string-array>
     <string-array name="theme_values">
         <item>light</item>
@@ -42,12 +42,17 @@
     </string-array>
 
     <string-array name="language_options">
-        <item>Español</item>
-        <item>Inglés</item>
+        <item>@string/spanish_language</item>
+        <item>@string/english_language</item>
     </string-array>
     <string-array name="language_values">
         <item>es</item>
         <item>en</item>
     </string-array>
 
+    <string name="clear_theme">Claro</string>
+    <string name="dark_theme">Oscuro</string>
+    <string name="automatic_theme">Automático</string>
+    <string name="spanish_language">Español</string>
+    <string name="english_language">Inglés</string>
 </resources>
