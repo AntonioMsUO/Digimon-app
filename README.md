@@ -59,7 +59,7 @@ A continuación se describe cada parte y su interacción:
 - La navegación y la configuración de la app están centralizadas y desacopladas de la lógica de negocio.
 
 ## Mapa de relaciones entre clases
-
+[Diagrama de clases](/UML Diagram.png)
 
 
 
