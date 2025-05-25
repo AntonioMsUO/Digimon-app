@@ -8,8 +8,8 @@ La arquitectura de la app sigue el patrón MVVM (Model-View-ViewModel) y está o
 A continuación se describe cada parte y su interacción:
 
 **1. Capa de Modelo (Model)**
-- Incluye las clases de datos (`Digimon`, `DigimonDetails_RootData`, `Attribute`, `Level`, `Type`, etc.) que representan la información de los Digimon y sus detalles, así como las entidades de la base de datos local (`FavoriteDigimon`).
-- Los modelos son simples data classes, algunos implementan `Parcelable` para facilitar el paso de datos entre fragmentos.
+- Incluye las clases de datos (`Digimon`, `DigimonDetails_RootData`, `Attribute`, `Level`, `Type`, etc.) que representan la información que se obtendrá de la API, así como las entidades de la base de datos local (`FavoriteDigimon`).
+- Los modelos son simples data classes, algunos implementan `Parcelable` para facilitar el paso de datos entre fragmentos para el mapeo de ubicaciones.
 
 **2. Capa de Datos (Data)**
 - **Acceso a API:**  
@@ -59,69 +59,7 @@ A continuación se describe cada parte y su interacción:
 - La navegación y la configuración de la app están centralizadas y desacopladas de la lógica de negocio.
 
 ## Mapa de relaciones entre clases
-```mermaid
-classDiagram
-    DigimonApp --> LocaleHelper
-    MainActivity --> LocaleHelper
-    MainActivity --> ActivityMainBinding
-    MainActivity --> NavHostFragment
-    MainActivity --> MainActivity
-    MainActivity --> R
-    MainActivity --> AppCompatActivity
 
-    HomeFragment --> HomeViewModel
-    HomeFragment --> DigimonListRecyclerViewAdapter
-    HomeFragment --> FavoritesRepository
-    HomeFragment --> FilterDialogFragment
-    HomeFragment --> FragmentHomeBinding
 
-    HomeViewModel --> Repository
-    HomeViewModel --> FavoritesRepository
-    HomeViewModel --> AppUIState
-    HomeViewModel --> Digimon
-
-    Repository --> RetrofitClient
-    Repository --> ApiResult
-    Repository --> DigimonApiService
-
-    RetrofitClient --> DigimonApiService
-
-    DigimonApiService --> RootData
-    DigimonApiService --> DigimonDetails_RootData
-
-    FavoritesRepository --> AppDatabase
-    FavoritesRepository --> FavoriteDigimonDao
-    FavoritesRepository --> FavoriteDigimon
-
-    AppDatabase --> FavoriteDigimonDao
-    AppDatabase --> FavoriteDigimon
-
-    FavoriteDigimonDao --> FavoriteDigimon
-
-    FavoritesViewModel --> FavoritesRepository
-    FavoritesViewModel --> FavoriteDigimon
-
-    DigimonDetailViewModel --> Repository
-    DigimonDetailViewModel --> DigimonDetails_RootData
-
-    DigimonDetails_RootData --> Image
-    DigimonDetails_RootData --> Level
-    DigimonDetails_RootData --> Type
-    DigimonDetails_RootData --> Attribute
-    DigimonDetails_RootData --> Field
-    DigimonDetails_RootData --> Description
-    DigimonDetails_RootData --> Skill
-    DigimonDetails_RootData --> PriorEvolution
-    DigimonDetails_RootData --> NextEvolution
-
-    FavoritesFragment --> FavoritesViewModel
-    FavoritesFragment --> FavoritesListAdapter
-    FavoritesFragment --> FragmentFavoritesBinding
-
-    FavoritesListAdapter --> FavoriteDigimon
-
-    MapFragment --> DigimonDetails_RootData
-
-    SettingsFragment --> LocaleHelper
 
 
